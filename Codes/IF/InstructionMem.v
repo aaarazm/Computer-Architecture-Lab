@@ -16,5 +16,3 @@ module InstructionMem (Address, Instruction);
     end
 
 endmodule
-
-
