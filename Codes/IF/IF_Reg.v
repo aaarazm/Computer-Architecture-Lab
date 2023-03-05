@@ -11,8 +11,8 @@ module IF_Reg(
 	);
 
 	input CLK,RST,flush,freeze;
-	input [31:0] PC_In,InstructionMemory_In;
-	output reg [31:0]PC_Out,InstructionMemory_Out;
+	input [31:0] PC_In, InstructionMemory_In;
+	output [31:0] PC_Out, InstructionMemory_Out;
 
 	wire reset = RST || flush;
 /* 	wire clock = CLK && ~freeze;

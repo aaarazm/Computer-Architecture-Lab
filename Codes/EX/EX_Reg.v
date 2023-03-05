@@ -20,7 +20,7 @@ module EX_Reg(
 	);
 	input CLK, RST;
 	input [31:0] PC_In;
-	output reg [31:0] PC_Out;
+	output [31:0] PC_Out;
 
 	Register #(32) EX_PC_Reg (
         .clk(CLK),

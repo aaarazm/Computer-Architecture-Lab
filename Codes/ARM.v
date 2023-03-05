@@ -7,18 +7,18 @@ module ARM(clk, rst, PC_Out, Instruction_Out);
     IF IF_inst(
         .clk(clk),
         .rst(rst),
-        .freeze(0),
-        .Branch_taken(0),
-        .BranchAddr(0),
+        .freeze(1'b0),
+        .Branch_taken(1'b0),
+        .BranchAddr(1'b0),
         .PC(PC_IF_to_Reg),
         .Instruction(Inst_IF_to_Reg)
     );
     IF_Reg IF_Reg_inst(
 	    .CLK(clk),
 	    .RST(rst),
-	    .freeze(0),
+	    .freeze(1'b0),
 	    .PC_In(PC_IF_to_Reg),
-	    .flush(0),
+	    .flush(1'b0),
 	    .InstructionMemory_In(Inst_IF_to_Reg),
 	    .PC_Out(PC_Reg_to_ID),
 	    .InstructionMemory_Out(Instruction_Out)
