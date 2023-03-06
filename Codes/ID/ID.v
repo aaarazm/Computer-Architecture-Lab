@@ -2,14 +2,13 @@ module ID(
 	CLK,
 	RST,
 	PC_In,
-	PC_Out
+	PC_Out,
 	Instruction,
 	Result_WB,
 	writeBackEn,
 	Dest_wb,
 	hazard,
 	SR,
-	to next stage
 	WB_EN, MEM_R_EN, MEM_W_EN, B, S,
 	EXE_CMD,
 	Val_Rn, Val_Rm,
@@ -17,8 +16,8 @@ module ID(
 	Shift_operand,
 	Signed_imm_24,
 	Dest,
-	src1, src2,
-	Two_src
+	//src1, src2,
+	//Two_src
 );
 	input CLK,RST;
 	input [31:0] PC_In;
@@ -45,27 +44,51 @@ module ID(
 	output [23:0] Signed_imm_24;
 	output [3:0] Dest;
 	// to hazard detect module
-	output [3:0] src1, src2;
-	output Two_src;
+	//output [3:0] src1, src2;
+	//output Two_src;
+	//assign Two_src = (~imm) || MEM_W_EN;
 
+	wire condition;
+	wire [8:0] condition_mux_out;
+
+	wire ctrl_WB_EN, ctrl_MEM_R_EN, ctrl_MEM_W_EN, ctrl_B, ctrl_S;
+	wire [3:0] ctrl_EXE_CMD;
 
 	ControlUnit ctrl_inst (
 		.S(Instruction[20]),
 		.mode(Instruction[27:26]),
 		.Opcode(Instruction[24:21]),
-		.Stat_update(S),
-		.B(B),
-		.MEM_W_EN(MEM_W_EN),
-		.MEM_R_EN(MEM_R_EN),
-		.WB_EN(WB_EN),
-		.EXE_CMD(EXE_CMD)
+		.Stat_update(ctrl_S),
+		.B(ctrl_B),
+		.MEM_W_EN(ctrl_MEM_W_EN),
+		.MEM_R_EN(ctrl_MEM_R_EN),
+		.WB_EN(ctrl_WB_EN),
+		.EXE_CMD(ctrl_EXE_CMD)
 	);
 
-	RegisterFile regfile_inst #( .WORD_SIZE(32), .ADDRESS_SIZE(4)) (
+	RegisterFile #( .WORD_SIZE(32), .ADDRESS_SIZE(4)) regfile_inst (
         .src1(src1), .src2(src2), .Dest_wb(Dest_wb),
         .Result_WB(Result_WB),
         .clk(clk), .rst(rst), .writeBackEn(writeBackEn),
         .reg1(Val_Rn), .reg2(Val_Rm)
 	);
+
+	ConditionCheck CC_inst (
+		.Cond(Instruction[31:28]),
+		.N(SR[3]),
+		.Zee(SR[2]),
+		.C(SR[1]),
+		.V(SR[0]),
+		.Result(condition)
+	);
+
+	Mux2 cond_mux (
+		.d0({ctrl_S, ctrl_B, ctrl_MEM_W_EN, ctrl_MEM_R_EN, ctrl_WB_EN, ctrl_EXE_CMD}),
+		.d1(9'b000000000),
+		.sel(hazard || (~condition)),
+		.w(condition_mux_out)
+	);
+
+	assign {S, B, MEM_W_EN, MEM_R_EN, WB_EN, EXE_CMD} = condition_mux_out;
 
 endmodule 

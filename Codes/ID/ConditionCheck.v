@@ -1,20 +1,18 @@
 
-module ConditionCheck(CLK,RST,Cond,Z,C,N,V,Result);
+module ConditionCheck(Cond,Zee,C,N,V,Result);
 
-input CLK,RST,Z,C,N,V;
+input Zee,C,N,V;
 input [3:0]Cond;
 output reg Result;
 
-always @(CLK,RST)
+always @(Cond,Zee,C,N,V,Result)
 begin
- if(RST)
- Result=1'b0;
-else begin
+
  case(Cond)
 	//EQ
-	4'b0000: Result=(Z)? 1:0;
+	4'b0000: Result=(Zee)? 1:0;
 	//NE
-	4'b0001: Result=(~Z)? 1:0; 
+	4'b0001: Result=(~Zee)? 1:0; 
 	//CS/HS
 	4'b0010: Result=(C)? 1:0;
 	//CC/LO
@@ -28,20 +26,19 @@ else begin
 	//VC
 	4'b0111: Result=(~V)? 1:0;
 	//HI
-	4'b1000: Result=(C && ~Z)? 1:0;
+	4'b1000: Result=(C && ~Zee)? 1:0;
 	//LS
-	4'b1001: Result=(~C && Z)? 1:0;
+	4'b1001: Result=(~C && Zee)? 1:0;
 	//GE
 	4'b1010: Result=(N==V)? 1:0;
 	//LT
 	4'b1011: Result=(N!=V)? 1:0;
 	//GT
-	4'b1100: Result=(Z==0 || N==V)? 1:0;
+	4'b1100: Result=(Zee==0 || N==V)? 1:0;
 	//LE
-	4'b1101: Result=(Z==1 || N!=V)? 1:0;
-	default: Result=1'bz;
+	4'b1101: Result=(Zee==1 || N!=V)? 1:0;
+	default: Result=1'bZ;
 	endcase
-end	
 
 end
 
