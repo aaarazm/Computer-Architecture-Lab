@@ -11,7 +11,7 @@ module InstructionMem (Address, Instruction);
             32'h00000010: Instruction = 32'b000000_01001_01010_00011_00000000000;
             32'h00000014: Instruction = 32'b000000_01011_01100_00000_00000000000;
             32'h00000018: Instruction = 32'b000000_01101_01110_00000_00000000000;
-            default: Instruction = 'z;
+            default: Instruction = 32'bzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
         endcase
     end
 

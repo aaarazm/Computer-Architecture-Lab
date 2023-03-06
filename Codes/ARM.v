@@ -1,6 +1,6 @@
-module ARM(clk, rst, PC_Out, Instruction_Out);
+module ARM(clk, rst);
     input clk, rst;
-    output [31:0] PC_Out, Instruction_Out; // outputting the Inst. for simulation.
+    wire [31:0] PC_Out, Instruction_Out; // outputting the Inst. for simulation.
 
     wire [31:0] PC_IF_to_Reg, PC_Reg_to_ID, PC_ID_to_Reg, PC_Reg_to_EX, PC_EX_to_Reg, PC_Reg_to_MEM, PC_MEM_to_Reg, PC_Reg_to_WB;
     wire [31:0] Inst_IF_to_Reg;

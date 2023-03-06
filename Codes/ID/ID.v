@@ -3,7 +3,7 @@ module ID(
 	RST,
 	PC_In,
 	PC_Out
-/* 	Instruction,
+	Instruction,
 	Result_WB,
 	writeBackEn,
 	Dest_wb,
@@ -18,7 +18,7 @@ module ID(
 	Signed_imm_24,
 	Dest,
 	src1, src2,
-	Two_src */
+	Two_src
 );
 	input CLK,RST;
 	input [31:0] PC_In;
@@ -26,7 +26,7 @@ module ID(
 
 	assign PC_Out = PC_In;
 	
-/* 	// from IF Reg
+	// from IF Reg
 	input [31:0] Instruction;
 	// from WB stage
 	input [31:0] Result_WB;
@@ -52,7 +52,7 @@ module ID(
 	ControlUnit ctrl_inst (
 		.S(Instruction[20]),
 		.mode(Instruction[27:26]),
-		.Opcode(Instruction[31:28]),
+		.Opcode(Instruction[24:21]),
 		.Stat_update(S),
 		.B(B),
 		.MEM_W_EN(MEM_W_EN),
@@ -66,6 +66,6 @@ module ID(
         .Result_WB(Result_WB),
         .clk(clk), .rst(rst), .writeBackEn(writeBackEn),
         .reg1(Val_Rn), .reg2(Val_Rm)
-	); */
+	);
 
 endmodule 
