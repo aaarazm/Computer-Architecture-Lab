@@ -21,7 +21,7 @@ module ControlUnit(S, mode, Opcode, Stat_update, B, MEM_W_EN, MEM_R_EN, WB_EN, E
   output reg MEM_R_EN, MEM_W_EN, WB_EN, B, Stat_update;
   output reg [3:0] EXE_CMD;
   always@(mode, Opcode, S)begin
-    {MEM_R_EN, MEM_W_EN, WB_EN, B, Stat_update, EXE_CMD,move} = 10'd0;
+    {MEM_R_EN, MEM_W_EN, WB_EN, B, Stat_update, EXE_CMD} = 9'd0;
     case(mode)
       0: begin
         Stat_update = S;
