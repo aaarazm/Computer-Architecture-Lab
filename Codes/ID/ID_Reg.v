@@ -10,11 +10,13 @@ module ID_Reg(
 	B_In,
 	S_In,
 	PC_In,
+	Val_Rn_In,
+	Val_Rm_In,
 	imm_In,
 	Shift_operand_In,
 	Signed_imm_24_In,
 	Dest_In,
-
+	SR_In,
 	WB_EN_Out,
 	MEM_R_EN_Out,
 	MEM_W_EN_Out,
@@ -22,10 +24,13 @@ module ID_Reg(
 	B_Out,
 	S_Out,
 	PC_Out,
+	Val_Rn_Out,
+	Val_Rm_Out,
 	imm_Out,
 	Shift_operand_Out,
 	Signed_imm_24_Out,
-	Dest_Out
+	Dest_Out,
+	SR_Out
 	);
 	input CLK, RST, flush;
 	input WB_EN_In, MEM_R_EN_In, MEM_W_EN_In;
@@ -37,6 +42,7 @@ module ID_Reg(
 	input [11:0] Shift_operand_In;
 	input [23:0] Signed_imm_24_In;
 	input [3:0] Dest_In;
+	input [3:0] SR_In;
 
 	output WB_EN, MEM_R_EN_Out, MEM_W_EN_Out, B_Out, S_Out;
 	output [3:0] EXE_CMD_Out;
@@ -46,8 +52,9 @@ module ID_Reg(
 	output [11:0] Shift_operand_Out;
 	output [23:0] Signed_imm_24_Out;
 	output [3:0] Dest_Out;
+	output [3:0] SR_Out;
 
-	Register #(146) ID_PC_Reg (
+	Register #(150) ID_PC_Reg (
         .clk(CLK),
         .rst(RST | flush),
         .ld(1'b1),
@@ -65,7 +72,8 @@ module ID_Reg(
 				imm_In,
 				Shift_operand_In,
 				Signed_imm_24_In,
-				Dest_In
+				Dest_In,
+				SR_In
 			}
 		),
         .regOut(
@@ -82,7 +90,8 @@ module ID_Reg(
 				imm_Out,
 				Shift_operand_Out,
 				Signed_imm_24_Out,
-				Dest_Out
+				Dest_Out,
+				SR_Out
 			}
 		)
     );
