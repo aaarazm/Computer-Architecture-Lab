@@ -54,7 +54,7 @@ module ID_Reg(
 	output [3:0] Dest_Out;
 	output [3:0] SR_Out;
 
-	Register #(150) ID_PC_Reg (
+	Register #(150) ID_Reg_inst (
         .clk(CLK),
         .rst(RST | flush),
         .ld(1'b1),

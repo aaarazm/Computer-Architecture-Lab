@@ -1,14 +1,14 @@
 module WB(
-	CLK,
-	RST,
-	PC_In,
-	PC_Out
+	ALU_result,
+	MEM_result,
+	MEM_R_EN,
+	WB_Value
 );
 
-	input CLK,RST;
-	input [31:0] PC_In;
-	output [31:0] PC_Out;
+	input MEM_R_EN;
+	input [31:0] ALU_result, MEM_result;
+	output [31:0] WB_Value;
 
-	assign PC_Out = PC_In;
+	assign WB_Value = MEM_R_EN ? MEM_result:ALU_result;
     
 endmodule
