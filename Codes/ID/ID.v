@@ -1,8 +1,6 @@
 module ID(
 	CLK,
 	RST,
-	PC_In,
-	PC_Out,
 	Instruction,
 	Result_WB,
 	writeBackEn,
@@ -20,10 +18,6 @@ module ID(
 	//Two_src
 );
 	input CLK,RST;
-	input [31:0] PC_In;
-	output [31:0] PC_Out;
-
-	assign PC_Out = PC_In;
 	
 	// from IF Reg
 	input [31:0] Instruction;
@@ -77,7 +71,7 @@ module ID(
 	RegisterFile #( .WORD_SIZE(32), .ADDRESS_SIZE(4)) regfile_inst (
         .src1(src1), .src2(src2), .Dest_wb(Dest_wb),
         .Result_WB(Result_WB),
-        .clk(clk), .rst(rst), .writeBackEn(writeBackEn),
+        .clk(CLK), .rst(RST), .writeBackEn(writeBackEn),
         .reg1(Val_Rn), .reg2(Val_Rm)
 	);
 
@@ -90,7 +84,7 @@ module ID(
 		.Result(condition)
 	);
 
-	Mux2 cond_mux (
+	Mux2 #(9) cond_mux (
 		.d0({ctrl_S, ctrl_B, ctrl_MEM_W_EN, ctrl_MEM_R_EN, ctrl_WB_EN, ctrl_EXE_CMD}),
 		.d1(9'b000000000),
 		.sel(hazard || (~condition)),

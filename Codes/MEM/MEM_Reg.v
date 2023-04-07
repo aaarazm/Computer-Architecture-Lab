@@ -21,7 +21,7 @@ module MEM_Reg(
 	output [3:0] Dest_Out;
 	output [31:0] ALU_Res_Out, Data_Out;
 
-	Register #(38) MEM_Reg_inst (
+	Register #(70) MEM_Reg_inst (
         .clk(CLK),
         .rst(RST),
         .ld(1'b1),

@@ -32,8 +32,8 @@ module ControlUnit(S, mode, Opcode, Stat_update, B, MEM_W_EN, MEM_R_EN, WB_EN, E
           4  : {EXE_CMD, WB_EN} = {4'b0010, 1'b1};
           5  : {EXE_CMD, WB_EN} = {4'b0011, 1'b1};
           6  : {EXE_CMD, WB_EN} = {4'b0101, 1'b1};
-          8  : {EXE_CMD} = {4'b0110}; 
-          10 : {EXE_CMD} = {4'b0100}; 
+          8  : {EXE_CMD} = 4'b0110; 
+          10 : {EXE_CMD} = 4'b0100; 
           12 : {EXE_CMD, WB_EN} = {4'b0111, 1'b1};
           13 : {EXE_CMD, WB_EN} = {4'b0001, 1'b1};
           15 : {EXE_CMD, WB_EN} = {4'b1001, 1'b1};

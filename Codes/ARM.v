@@ -1,6 +1,6 @@
 module ARM(clk, rst);
     input clk, rst;
-    wire [31:0] PC_Out, ID_Instruction; // outputting the Inst. for simulation.
+    wire [31:0] ID_Instruction;
 
     wire [31:0] IF_PC, ID_PC, EX_PC;
     wire [31:0] Branch_Address;
@@ -30,7 +30,7 @@ module ARM(clk, rst);
         .rst(rst),
         .freeze(1'b0),
         .Branch_taken(Branch_taken),
-        .BranchAddr(1'b0),
+        .BranchAddr(32'b0),
         .PC(IF_PC),
         .Instruction(IF_Instruction)
     );
@@ -47,8 +47,6 @@ module ARM(clk, rst);
     ID ID_inst(
 		.CLK(clk),
 		.RST(rst),
-		.PC_In(PC_Reg_to_ID),
-		.PC_Out(PC_ID_to_Reg),
 		.Instruction(ID_Instruction),
 		.Result_WB(WB_Value),
 		.writeBackEn(WB_WB_EN),
