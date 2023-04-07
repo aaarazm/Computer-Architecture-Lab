@@ -14,7 +14,7 @@ module ALU (in1, in2, Cin, Vin, SR, EXE_CMD, result);
     assign Zout = ~(|result);
     assign SR = {Nout, Zout, Cout, Vout};
 
-    always @(EXE_CMD, in1, in2, C) begin
+    always @(EXE_CMD, in1, in2, Cin) begin
         result = 32'bX; Vout = Vin; Cout = Cin; // Vout, Cout = 0 ??
         case (EXE_CMD)
             4'h1: begin: MOV

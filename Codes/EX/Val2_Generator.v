@@ -13,7 +13,7 @@ module Val2_Generator(Val_Rm, imm, memRW, Shift_operand, Val2);
     assign shift = Shift_operand[6:5];
     assign shift_imm = Shift_operand[11:7];
     assign imm32_rotate = {2{24'b0, immed_8}};
-    assign imm_shift_arithm = {32{Val_Rm[31]}, Val_Rm};
+    assign imm_shift_arithm = {{32{Val_Rm[31]}}, Val_Rm};
     assign imm_shift_rotate = {2{Val_Rm}};
     assign {rotate_imm, immed_8} = Shift_operand;
 
@@ -22,7 +22,7 @@ module Val2_Generator(Val_Rm, imm, memRW, Shift_operand, Val2);
             Val2 = {20'b0, Shift_operand};
         end
         else if(imm) begin: immediate32
-            Val2 = imm32_rotate[31 + (rotate_imm << 1):(rotate_imm << 1)];
+            Val2 = imm32_rotate[31 + (rotate_imm << 1) -: 32];
         end
         else begin: immediateShifts
             case(shift)
@@ -33,12 +33,12 @@ module Val2_Generator(Val_Rm, imm, memRW, Shift_operand, Val2);
                     Val2 = Val_Rm >> shift_imm;
                 end
                 2'b10: begin: ASR
-                    Val2 = imm_shift_arithm[31 + shift_imm:shift_imm];
+                    Val2 = imm_shift_arithm[31 + shift_imm -: 32];
                 end
                 2'b11: begin: ROR
-                    Val2 = imm_shift_rotate[31 + shift_imm:shift_imm];
+                    Val2 = imm_shift_rotate[31 + shift_imm -: 32];
                 end
-                default: 
+                default: Val2 = 32'bZ;
             endcase
         end
     end

@@ -44,7 +44,7 @@ module ID_Reg(
 	input [3:0] Dest_In;
 	input [3:0] SR_In;
 
-	output WB_EN, MEM_R_EN_Out, MEM_W_EN_Out, B_Out, S_Out;
+	output WB_EN_Out, MEM_R_EN_Out, MEM_W_EN_Out, B_Out, S_Out;
 	output [3:0] EXE_CMD_Out;
 	output [31:0] PC_Out;
 	output [31:0] Val_Rn_Out, Val_Rm_Out;

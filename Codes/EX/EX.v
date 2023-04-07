@@ -34,7 +34,7 @@ module EX(
 	ALU alu_inst (
 		.in1(Val_Rn),
 		.in2(Val2),
-		.Cin(S_In[1]),
+		.Cin(SR_In[1]),
 		.Vin(SR_In[0]),
 		.SR(SR_Out),
 		.EXE_CMD(EXE_CMD),

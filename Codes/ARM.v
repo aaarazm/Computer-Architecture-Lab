@@ -7,15 +7,15 @@ module ARM(clk, rst);
     wire [31:0] IF_Instruction, ID_Val_Rn, ID_Val_Rm,
 				EX_Val_Rn, EX_Val_Rm, EX_ALU_Res,
 				MEM_ALU_Res, MEM_Val_Rm,
-				WB_Data, WB_MEM_R_EN, WB_MEM_W_EN, WB_ALU_Res, WB_Value;
+				WB_Data, WB_ALU_Res, WB_Value;
 	wire ID_WB_EN, ID_MEM_R_EN, ID_MEM_W_EN, ID_B, ID_S, ID_imm,
 		EX_WB_EN, EX_MEM_R_EN, EX_MEM_W_EN, EX_S, EX_imm,
 		MEM_WB_EN, MEM_MEM_R_EN, MEM_MEM_W_EN,
-		WB_WB_EN, WB_Dest, Branch_taken;
+		WB_WB_EN, WB_MEM_R_EN, WB_MEM_W_EN, Branch_taken;
 	wire [23:0] ID_signed_immed_24, EX_signed_immed_24;
 	wire [11:0] ID_Shift_operand, EX_Shift_operand;
 	wire [3:0] SR_In, SR_Out, ID_EXE_CMD, ID_Dest,
-	EX_EXE_CMD, EX_SR, EX_Dest, MEM_Dest;
+	EX_EXE_CMD, EX_SR, EX_Dest, MEM_Dest, WB_Dest;
 
 	Register #(4) Status_Reg_inst (
         .clk(clk),
@@ -55,13 +55,17 @@ module ARM(clk, rst);
 		.Dest_wb(WB_Dest),
 		.hazard(1'b0),
 		.SR(SR_Out),
-		.WB_EN(ID_WB_EN), MEM_R_EN(ID_MEM_R_EN), MEM_W_EN(ID_MEM_W_EN), B(ID_B), S(ID_S),
+		.WB_EN(ID_WB_EN),
+		.MEM_R_EN(ID_MEM_R_EN),
+		.MEM_W_EN(ID_MEM_W_EN),
+		.B(ID_B),
+		.S(ID_S),
 		.EXE_CMD(ID_EXE_CMD),
-		.Val_Rn(ID_Val_Rn), Val_Rm(ID_Val_Rm),
+		.Val_Rn(ID_Val_Rn), .Val_Rm(ID_Val_Rm),
 		.imm(ID_imm),
 		.Shift_operand(ID_Shift_operand),
 		.Signed_imm_24(ID_signed_immed_24),
-		.Dest(ID_Dest),
+		.Dest(ID_Dest)
 		// to hazard unit
 		// .src1(), src2()
 		//.Two_src
@@ -128,7 +132,7 @@ module ARM(clk, rst);
 		.MEM_W_EN_Out(MEM_MEM_W_EN),
 		.ALU_Res_Out(MEM_ALU_Res),
 		.Val_Rm_Out(MEM_Val_Rm),
-		.Dest_Out(MEM_Dest),
+		.Dest_Out(MEM_Dest)
     );
 /*     MEM MEM_inst(
 	    .CLK(clk),
