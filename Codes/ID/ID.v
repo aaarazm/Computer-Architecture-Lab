@@ -16,7 +16,7 @@ module ID(
 	Shift_operand,
 	Signed_imm_24,
 	Dest,
-	//src1, src2,
+	src1, src2,
 	//Two_src
 );
 	input CLK,RST;
@@ -44,7 +44,7 @@ module ID(
 	output [23:0] Signed_imm_24;
 	output [3:0] Dest;
 	// to hazard detect module
-	//output [3:0] src1, src2;
+	output [3:0] src1, src2;
 	//output Two_src;
 	//assign Two_src = (~imm) || MEM_W_EN;
 
@@ -53,6 +53,14 @@ module ID(
 
 	wire ctrl_WB_EN, ctrl_MEM_R_EN, ctrl_MEM_W_EN, ctrl_B, ctrl_S;
 	wire [3:0] ctrl_EXE_CMD;
+
+	assign src1 = Instruction[19:16]; // Instruction[19:16] -> Rn
+	assign src2 = MEM_W_EN ? Instruction[15:12]:Instruction[3:0];
+	assign Dest = Instruction[15:12]; // Instruction[15:12] -> Rd
+	assign imm = Instruction[25];	// imm -> I
+	assign Shift_operand = Instruction[11:0];
+	assign Signed_imm_24 = Instruction[23:0];
+
 
 	ControlUnit ctrl_inst (
 		.S(Instruction[20]),

@@ -5,7 +5,7 @@ input Zee,C,N,V;
 input [3:0]Cond;
 output reg Result;
 
-always @(Cond,Zee,C,N,V,Result)
+always @(Cond,Zee,C,N,V)
 begin
 
  case(Cond)
