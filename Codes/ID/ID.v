@@ -14,7 +14,7 @@ module ID(
 	Shift_operand,
 	Signed_imm_24,
 	Dest,
-	src1, src2,
+	src1, src2
 	//Two_src
 );
 	input CLK,RST;
@@ -43,7 +43,6 @@ module ID(
 	//assign Two_src = (~imm) || MEM_W_EN;
 
 	wire condition;
-	wire [8:0] condition_mux_out;
 
 	wire ctrl_WB_EN, ctrl_MEM_R_EN, ctrl_MEM_W_EN, ctrl_B, ctrl_S;
 	wire [3:0] ctrl_EXE_CMD;
@@ -84,13 +83,15 @@ module ID(
 		.Result(condition)
 	);
 
-	Mux2 #(9) cond_mux (
-		.d0({ctrl_S, ctrl_B, ctrl_MEM_W_EN, ctrl_MEM_R_EN, ctrl_WB_EN, ctrl_EXE_CMD}),
+/* 	Mux2 #(9) cond_mux (
+		.d0(),
 		.d1(9'b000000000),
-		.sel(hazard || (~condition)),
-		.w(condition_mux_out)
-	);
+		.sel(hazard | (~condition)),
+		.w({S, B, MEM_W_EN, MEM_R_EN, WB_EN, EXE_CMD})
+	); */
 
-	assign {S, B, MEM_W_EN, MEM_R_EN, WB_EN, EXE_CMD} = condition_mux_out;
+	assign {S, B, MEM_W_EN, MEM_R_EN, WB_EN, EXE_CMD} = (hazard | (~condition)) ? 9'b0:
+		{ctrl_S, ctrl_B, ctrl_MEM_W_EN, ctrl_MEM_R_EN, ctrl_WB_EN, ctrl_EXE_CMD};
+
 
 endmodule 

@@ -11,19 +11,19 @@ module ARM(clk, rst);
 	wire ID_WB_EN, ID_MEM_R_EN, ID_MEM_W_EN, ID_B, ID_S, ID_imm,
 		EX_WB_EN, EX_MEM_R_EN, EX_MEM_W_EN, EX_S, EX_imm,
 		MEM_WB_EN, MEM_MEM_R_EN, MEM_MEM_W_EN,
-		WB_WB_EN, WB_MEM_R_EN, WB_MEM_W_EN, Branch_taken;
+		WB_WB_EN, WB_MEM_R_EN, Branch_taken;
 	wire [23:0] ID_signed_immed_24, EX_signed_immed_24;
 	wire [11:0] ID_Shift_operand, EX_Shift_operand;
 	wire [3:0] SR_In, SR_Out, ID_EXE_CMD, ID_Dest,
 	EX_EXE_CMD, EX_SR, EX_Dest, MEM_Dest, WB_Dest;
 
-	Register #(4) Status_Reg_inst (
-        .clk(clk),
-        .rst(rst),
-        .ld(EX_S),
-        .regIn(SR_In),
-        .regOut(SR_Out)
-    );
+	StatusReg status_reg_inst (
+		.clk(clk),
+		.rst(rst),
+		.S(EX_S),
+		.SR_In(SR_In),
+		.SR_Out(SR_Out)
+	);
 
     IF IF_inst(
         .clk(clk),

@@ -37,7 +37,8 @@ begin
 	4'b1100: Result=(Zee==0 || N==V)? 1:0;
 	//LE
 	4'b1101: Result=(Zee==1 || N!=V)? 1:0;
-	default: Result=1'bZ;
+	4'b1110: Result=1'b1;
+	default: Result=1'bz;
 	endcase
 
 end
