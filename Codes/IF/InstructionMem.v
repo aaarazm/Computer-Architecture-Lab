@@ -4,6 +4,7 @@ module InstructionMem (Address, Instruction);
 
     always @(Address) begin
         case (Address)
+            // 0: Instruction = 32'b1110_01_0_0100_0_0100_1000_000000000000; //STR R8 ,[R4],#0 //MEM[4] = 8
             0:  Instruction = 32'b1110_00_1_1101_0_0000_0000_000000010100; //MOV R0 ,#20 //R0 = 20
             4:  Instruction = 32'b1110_00_1_1101_0_0000_0001_101000000001; //MOV R1 ,#4096 //R1 = 4096
             8:  Instruction = 32'b1110_00_1_1101_0_0000_0010_000100000011; //MOV R2 ,#0xC0000000 //R2 = -1073741824
