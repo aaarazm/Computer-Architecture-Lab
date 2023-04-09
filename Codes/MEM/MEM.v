@@ -1,14 +1,22 @@
 module MEM(
 	CLK,
-	RST,
-	PC_In,
-	PC_Out
+	MEM_R_EN,
+	MEM_W_EN,
+	Address,
+	Data,
+	MEM_result
 );
 
-	input CLK,RST;
-	input [31:0] PC_In;
-	output [31:0] PC_Out;
+	input CLK, MEM_R_EN, MEM_W_EN;
+	input [31:0] Address, Data;
+	output [31:0] MEM_result;
 
-	assign PC_Out = PC_In;
+	Memory #(32, 32) memory_inst(
+        .Address(Address),
+        .WriteData(Data),
+        .MemRead(MEM_R_EN), .MemWrite(MEM_W_EN), .clk(CLK),
+        .ReadData(MEM_result)
+    );
+
 
 endmodule 
