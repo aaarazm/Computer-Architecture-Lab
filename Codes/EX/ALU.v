@@ -6,10 +6,14 @@ module ALU (in1, in2, Cin, Vin, SR, EXE_CMD, result);
     output reg [31:0] result;
 
     reg Cout, Vout;
-    wire Nout, Zout, OF;
+    wire Nout, Zout;
     
-    assign OF = (result[31] & ~in1[31] & ~in2[31]) |
+/*     assign OF = (result[31] & ~in1[31] & ~in2[31]) |
                 (~result[31] & in1[31] & in2[31]);
+                
+    assign OFN = (result[31] & ~in1[31] & in2[31]) |
+                (~result[31] & in1[31] & ~in2[31]); */
+
     assign Nout = result[31];
     assign Zout = ~(|result);
     assign SR = {Nout, Zout, Cout, Vout};
@@ -25,19 +29,19 @@ module ALU (in1, in2, Cin, Vin, SR, EXE_CMD, result);
             end
             4'h2: begin: ADD
                 {Cout, result} = in1 + in2;
-                Vout = OF;
+                Vout = (result[31] & ~in1[31] & ~in2[31]) | (~result[31] & in1[31] & in2[31]);
             end
             4'h3: begin: ADC
                 {Cout, result} = in1 + in2 + Cin;
-                Vout = OF;
+                Vout = (result[31] & ~in1[31] & ~in2[31]) | (~result[31] & in1[31] & in2[31]);
             end 
             4'h4: begin: SUB
                 {Cout, result} = in1 - in2;
-                Vout = OF;
+                Vout = (result[31] & ~in1[31] & in2[31]) | (~result[31] & in1[31] & ~in2[31]);
             end
             4'h5: begin: SBC
                 {Cout, result} = in1 - in2 - ({31'b0, ~Cin});
-                Vout = OF;
+                Vout = (result[31] & ~in1[31] & in2[31]) | (~result[31] & in1[31] & ~in2[31]);
             end
             4'h6: begin: AND
                 result = in1 & in2;

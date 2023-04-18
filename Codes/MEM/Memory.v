@@ -6,7 +6,7 @@ module Memory #(parameter WORD_SIZE = 32, ADDRESS_SIZE = 32) (
 );
     localparam offset = 1024;
 
-    reg [31:0] mem [0:65464];
+    reg [31:0] mem [0:63];
 
 /*     initial begin
         $readmemb("../Codes/mem/memory.mem", mem, 1000);

@@ -28,13 +28,13 @@ begin
 	//HI
 	4'b1000: Result=(C && ~Zee)? 1:0;
 	//LS
-	4'b1001: Result=(~C && Zee)? 1:0;
+	4'b1001: Result=(~C || Zee)? 1:0;
 	//GE
 	4'b1010: Result=(N==V)? 1:0;
 	//LT
 	4'b1011: Result=(N!=V)? 1:0;
 	//GT
-	4'b1100: Result=(Zee==0 || N==V)? 1:0;
+	4'b1100: Result=(Zee==0 && ((N && V) || (~N && ~V)))? 1:0;
 	//LE
 	4'b1101: Result=(Zee==1 || N!=V)? 1:0;
 	//Always

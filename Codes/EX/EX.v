@@ -51,7 +51,7 @@ module EX(
 
 	PC_Branch_Addr branchAdder_inst (
 		.PC(PC),
-		.signed_immed_24({8'b0, Signed_EX_imm_24}),
+		.signed_immed_24({{8{Signed_EX_imm_24[23]}}, Signed_EX_imm_24}),
 		.Branch_Address(Branch_Address)
 	);
 

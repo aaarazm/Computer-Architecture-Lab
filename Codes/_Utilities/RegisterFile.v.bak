@@ -20,7 +20,7 @@ module RegisterFile #(parameter WORD_SIZE = 32, ADDRESS_SIZE = 4) (
                 memReg[i] <= i;
             end
         end
-        else if(writeBackEn) begin
+        if(writeBackEn) begin
             memReg[Dest_wb] <= Result_WB;
         end
     end

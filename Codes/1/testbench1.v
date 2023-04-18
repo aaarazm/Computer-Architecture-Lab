@@ -14,7 +14,7 @@ module testbench1();
     initial begin
         #1 rst = 1;
         #36 rst = 0;
-        #300 $stop;
+        #16000 $stop;
     end
 
 endmodule

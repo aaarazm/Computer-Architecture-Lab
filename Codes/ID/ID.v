@@ -14,8 +14,8 @@ module ID(
 	Shift_operand,
 	Signed_imm_24,
 	Dest,
-	src1, src2
-	//Two_src
+	src1, src2,
+	Two_src
 );
 	input CLK,RST;
 	
@@ -39,8 +39,8 @@ module ID(
 	output [3:0] Dest;
 	// to hazard detect module
 	output [3:0] src1, src2;
-	//output Two_src;
-	//assign Two_src = (~imm) || MEM_W_EN;
+	output Two_src;
+	assign Two_src = (~imm) || MEM_W_EN;
 
 	wire condition;
 
