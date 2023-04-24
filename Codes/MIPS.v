@@ -304,6 +304,7 @@ inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 ARM ins1(
     .clk(CLOCK_50),
     .rst(SW[0]),
+	.forward_En(SW[1]),
 	.beep(LEDR[0])
 );
 	

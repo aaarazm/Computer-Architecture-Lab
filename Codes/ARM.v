@@ -1,5 +1,5 @@
-module ARM(clk, rst, beep);
-    input clk, rst;
+module ARM(clk, rst, forward_En, beep);
+    input clk, rst, forward_En;
 
 
 	// beep boop?
@@ -35,6 +35,18 @@ module ARM(clk, rst, beep);
 		.SR_In(SR_In),
 		.SR_Out(SR_Out)
 	);
+
+/* 	forwarding_unit forwarding_inst (
+		.src1(src1),
+		.src2(src2),
+		.forward_En(forward_En),
+		.MEM_WB_EN(MEM_WB_EN),
+		.MEM_Dest(MEM_Dest),
+		.WB_WB_EN(WB_WB_EN),
+		.WB_Dest(WB_Dest),
+		.forward1(forward1),
+		.forward2(forward2)
+	); */
 
 	hazard_detection_unit hazard_detection_inst (
     	.src1(src1),
