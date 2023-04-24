@@ -39,6 +39,7 @@ module ARM(clk, rst, beep);
 	hazard_detection_unit hazard_detection_inst (
     	.src1(src1),
 		.src2(src2),
+		.forward_En(1'b0), // not yet
 		.EXE_Dest(EX_Dest),
 		.MEM_Dest(MEM_Dest),
 		.EXE_WB_EN(EX_WB_EN),
