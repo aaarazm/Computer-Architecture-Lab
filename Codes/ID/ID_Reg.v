@@ -17,8 +17,8 @@ module ID_Reg(
 	Signed_imm_24_In,
 	Dest_In,
 	SR_In,
-	// src1_In,
-	// src2_In,
+	src1_In,
+	src2_In,
 	WB_EN_Out,
 	MEM_R_EN_Out,
 	MEM_W_EN_Out,
@@ -33,8 +33,8 @@ module ID_Reg(
 	Signed_imm_24_Out,
 	Dest_Out,
 	SR_Out,
-	// src1_Out,
-	// src2_Out
+	src1_Out,
+	src2_Out
 	);
 	input CLK, RST, flush;
 	input WB_EN_In, MEM_R_EN_In, MEM_W_EN_In;
@@ -47,6 +47,7 @@ module ID_Reg(
 	input [23:0] Signed_imm_24_In;
 	input [3:0] Dest_In;
 	input [3:0] SR_In;
+	input [3:0] src1_In, src2_In;
 
 	output WB_EN_Out, MEM_R_EN_Out, MEM_W_EN_Out, B_Out, S_Out;
 	output [3:0] EXE_CMD_Out;
@@ -57,8 +58,9 @@ module ID_Reg(
 	output [23:0] Signed_imm_24_Out;
 	output [3:0] Dest_Out;
 	output [3:0] SR_Out;
+	output [3:0] src1_Out, src2_Out;
 
-	RegisterSynch #(150) ID_Reg_inst (
+	RegisterSynch #(158) ID_Reg_inst (
         .clk(CLK),
         .rst(RST),
 		.clr(flush),
@@ -78,7 +80,9 @@ module ID_Reg(
 				Shift_operand_In,
 				Signed_imm_24_In,
 				Dest_In,
-				SR_In
+				SR_In,
+				src1_In,
+				src2_In
 			}
 		),
         .regOut(
@@ -96,7 +100,9 @@ module ID_Reg(
 				Shift_operand_Out,
 				Signed_imm_24_Out,
 				Dest_Out,
-				SR_Out
+				SR_Out,
+				src1_Out,
+				src2_Out
 			}
 		)
     );

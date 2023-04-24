@@ -1,5 +1,5 @@
-module ARM(clk, rst, forward_En, beep);
-    input clk, rst, forward_En;
+module ARM(clk, rst, forward_EN, beep);
+    input clk, rst, forward_EN;
 
 
 	// beep boop?
@@ -11,7 +11,7 @@ module ARM(clk, rst, forward_En, beep);
     wire [31:0] IF_PC, ID_PC, EX_PC;
     wire [31:0] Branch_Address;
     wire [31:0] IF_Instruction, ID_Val_Rn, ID_Val_Rm,
-				EX_Val_Rn, EX_Val_Rm, EX_ALU_Res,
+				EX_Val_Rn, EX_Val_Rm, EX_Val_Rm_Out, EX_ALU_Res,
 				MEM_ALU_Res, MEM_Val_Rm,
 				WB_Data, MEM_Data, WB_ALU_Res, WB_Value;
 	wire ID_WB_EN, ID_MEM_R_EN, ID_MEM_W_EN, ID_B, ID_S, ID_imm,
@@ -21,7 +21,8 @@ module ARM(clk, rst, forward_En, beep);
 	wire hazard, Two_src;
 	wire [23:0] ID_signed_immed_24, EX_signed_immed_24;
 	wire [11:0] ID_Shift_operand, EX_Shift_operand;
-	wire [3:0] src1, src2;
+	wire [3:0] src1, src2, EX_src1, EX_src2;
+	wire [1:0] forward1, forward2;
 	wire [3:0] SR_In, SR_Out, ID_EXE_CMD, ID_Dest,
 	EX_EXE_CMD, EX_SR, EX_Dest, MEM_Dest, WB_Dest;
 
@@ -36,23 +37,24 @@ module ARM(clk, rst, forward_En, beep);
 		.SR_Out(SR_Out)
 	);
 
-/* 	forwarding_unit forwarding_inst (
-		.src1(src1),
-		.src2(src2),
-		.forward_En(forward_En),
+	forwarding_unit forwarding_inst (
+		.src1(EX_src1),
+		.src2(EX_src2),
+		.forward_EN(forward_EN),
 		.MEM_WB_EN(MEM_WB_EN),
 		.MEM_Dest(MEM_Dest),
 		.WB_WB_EN(WB_WB_EN),
 		.WB_Dest(WB_Dest),
 		.forward1(forward1),
 		.forward2(forward2)
-	); */
+	);
 
 	hazard_detection_unit hazard_detection_inst (
     	.src1(src1),
 		.src2(src2),
-		.forward_En(1'b0), // not yet
+		.forward_EN(forward_EN), // not yet
 		.EXE_Dest(EX_Dest),
+		.EX_MEM_R_EN(EX_MEM_R_EN),
 		.MEM_Dest(MEM_Dest),
 		.EXE_WB_EN(EX_WB_EN),
 		.MEM_WB_EN(MEM_WB_EN),
@@ -120,6 +122,8 @@ module ARM(clk, rst, forward_En, beep);
 		.Shift_operand_In(ID_Shift_operand),
 		.Signed_imm_24_In(ID_signed_immed_24),
 		.Dest_In(ID_Dest),
+		.src1_In(src1),
+		.src2_In(src2),
 		.SR_In(SR_Out),
 		.WB_EN_Out(EX_WB_EN),
 		.MEM_R_EN_Out(EX_MEM_R_EN),
@@ -134,6 +138,8 @@ module ARM(clk, rst, forward_En, beep);
 		.Shift_operand_Out(EX_Shift_operand),
 		.Signed_imm_24_Out(EX_signed_immed_24),
 		.Dest_Out(EX_Dest),
+		.src1_Out(EX_src1),
+		.src2_Out(EX_src2),
 		.SR_Out(EX_SR)
     );
     EX EX_inst(
@@ -144,11 +150,16 @@ module ARM(clk, rst, forward_En, beep);
 		.PC(EX_PC),
 		.Val_Rn(EX_Val_Rn),
 		.Val_Rm(EX_Val_Rm),
+		.forward1(forward1),
+		.forward2(forward2),
+		.WB_Value(WB_Value),
+		.MEM_ALU_Res(MEM_ALU_Res),
 		.Shift_operand(EX_Shift_operand),
 		.imm(EX_imm),
 		.Signed_EX_imm_24(EX_signed_immed_24),
 		.ALU_Result(EX_ALU_Res),
 		.Branch_Address(Branch_Address),
+		.EX_Val_Rm_Out(EX_Val_Rm_Out),
 		.SR_Out(SR_In)
     );
     EX_Reg EX_Reg_inst(
@@ -158,7 +169,7 @@ module ARM(clk, rst, forward_En, beep);
 		.MEM_R_EN_In(EX_MEM_R_EN),
 		.MEM_W_EN_In(EX_MEM_W_EN),
 		.ALU_Res_In(EX_ALU_Res),
-		.Val_Rm_In(EX_Val_Rm),
+		.Val_Rm_In(EX_Val_Rm_Out),
 		.Dest_In(EX_Dest),
 		.WB_EN_Out(MEM_WB_EN),
 		.MEM_R_EN_Out(MEM_MEM_R_EN),
