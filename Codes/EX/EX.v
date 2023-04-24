@@ -39,7 +39,7 @@ module EX(
 
 	assign EX_Val_Rm_Out = forwarded2;
 
-	assign forwarded1 = (forward1 == 2'b00) ? Val_Rm:
+	assign forwarded1 = (forward1 == 2'b00) ? Val_Rn:
 					(forward1 == 2'b01) ? MEM_ALU_Res:
 					(forward1 == 2'b10) ? WB_Value: 'bz;
 
@@ -48,7 +48,7 @@ module EX(
 					(forward2 == 2'b10) ? WB_Value: 'bz;
 
 	ALU alu_inst (
-		.in1(Val_Rn),
+		.in1(forwarded1),
 		.in2(Val2),
 		.Cin(SR_In[1]),
 		.Vin(SR_In[0]),
