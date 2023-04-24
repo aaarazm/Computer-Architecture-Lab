@@ -9,7 +9,7 @@ module testbench1();
     ARM uut (
         .clk(clk),
         .rst(rst),
-        .forward_EN(1'b1)
+        .forward_EN(1'b0)
     );
 
     initial begin
