@@ -52,7 +52,7 @@ module InstructionMem (Address, Instruction);
             176: Instruction = 32'b1110_01_0_0100_1_0000_0101_000000010000; //LDR R5 ,[R0],#16 //R5 = -123
             180: Instruction = 32'b1110_01_0_0100_1_0000_0110_000000010100; //LDR R6 ,[R0],#20 //R4 = 10
             184: Instruction = 32'b1110_10_1_0_111111111111111111111111 ; //B #-1
-            default: Instruction = 32'bzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
+            default: Instruction = 32'b00000000000000000000000000000000;
         endcase
     end
 

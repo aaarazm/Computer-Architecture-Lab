@@ -8,7 +8,9 @@ module MemoryTB ();
     Memory #(32, 32) UUT(
         .Address(Address),
         .WriteData(WriteData),
-        .MemRead(MemRead), .MemWrite(MemWrite), .clk(clk),
+        .MemRead(MemRead),
+        .MemWrite(MemWrite),
+        .clk(clk),
         .ReadData(ReadData)
     );
 

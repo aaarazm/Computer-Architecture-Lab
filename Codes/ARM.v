@@ -1,9 +1,11 @@
-module ARM(clk, rst, forward_EN, beep);
+module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     input clk, rst, forward_EN;
 
-
+	inout [15:0] SRAM_DQ;
+	output [17:0] SRAM_ADDR;
 	// beep boop?
 	output beep;
+	output SRAM_WE_N;
 
 
     wire [31:0] ID_Instruction;
@@ -18,7 +20,7 @@ module ARM(clk, rst, forward_EN, beep);
 		EX_WB_EN, EX_MEM_R_EN, EX_MEM_W_EN, EX_S, EX_imm,
 		MEM_WB_EN, MEM_MEM_R_EN, MEM_MEM_W_EN,
 		WB_WB_EN, WB_MEM_R_EN, Branch_taken;
-	wire hazard, Two_src;
+	wire hazard, Two_src, freeze_N;
 	wire [23:0] ID_signed_immed_24, EX_signed_immed_24;
 	wire [11:0] ID_Shift_operand, EX_Shift_operand;
 	wire [3:0] src1, src2, EX_src1, EX_src2;
@@ -180,10 +182,15 @@ module ARM(clk, rst, forward_EN, beep);
     );
     MEM MEM_inst(
 		.CLK(clk),
+		.RST(rst),
 		.MEM_R_EN(MEM_MEM_R_EN),
 		.MEM_W_EN(MEM_MEM_W_EN),
 		.Address(MEM_ALU_Res),
 		.Data(MEM_Val_Rm),
+		.SRAM_WE_N(SRAM_WE_N),
+		.freeze_N(freeze_N),
+		.SRAM_DQ(SRAM_DQ),
+		.SRAM_ADDR(SRAM_ADDR),
 		.MEM_result(MEM_Data)
     );
     MEM_Reg MEM_Reg_inst(

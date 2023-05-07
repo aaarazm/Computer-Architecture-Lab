@@ -31,8 +31,9 @@ module EX(
     input [11:0] Shift_operand;
     input imm;
 	input [23:0] Signed_EX_imm_24;
+	input [31:0] MEM_ALU_Res, WB_Value;
 
-	output [31:0] ALU_Result, Branch_Address, WB_Value, MEM_ALU_Res, EX_Val_Rm_Out;
+	output [31:0] ALU_Result, Branch_Address, EX_Val_Rm_Out;
 	output [3:0] SR_Out;
 
 	wire [31:0] Val2, forwarded1, forwarded2;
