@@ -2,6 +2,7 @@
 module ID_Reg(
 	CLK,
 	RST,
+	freeze_N,
 	flush,
 	WB_EN_In,
 	MEM_R_EN_In,
@@ -36,7 +37,7 @@ module ID_Reg(
 	src1_Out,
 	src2_Out
 	);
-	input CLK, RST, flush;
+	input CLK, RST, freeze_N, flush;
 	input WB_EN_In, MEM_R_EN_In, MEM_W_EN_In;
 	input B_In, S_In;
 	input [3:0] EXE_CMD_In;
@@ -64,7 +65,7 @@ module ID_Reg(
         .clk(CLK),
         .rst(RST),
 		.clr(flush),
-        .ld(1'b1),
+        .ld(freeze_N),
         .regIn(
 			{
 				WB_EN_In,

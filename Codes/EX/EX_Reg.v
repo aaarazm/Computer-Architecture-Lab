@@ -2,6 +2,7 @@
 module EX_Reg(
 	CLK,
 	RST,
+	freeze_N,
 	WB_EN_In,
 	MEM_R_EN_In,
 	MEM_W_EN_In,
@@ -15,7 +16,7 @@ module EX_Reg(
 	Val_Rm_Out,
 	Dest_Out
 	);
-	input CLK, RST;
+	input CLK, RST, freeze_N;
 	input WB_EN_In, MEM_R_EN_In, MEM_W_EN_In;
 	input [31:0] ALU_Res_In, Val_Rm_In;
 	input [3:0] Dest_In;
@@ -27,7 +28,7 @@ module EX_Reg(
 	Register #(71) EX_Reg_inst (
         .clk(CLK),
         .rst(RST),
-        .ld(1'b1),
+        .ld(freeze_N),
         .regIn(
 			{
 				WB_EN_In,
