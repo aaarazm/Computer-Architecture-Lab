@@ -20,7 +20,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
 		EX_WB_EN, EX_MEM_R_EN, EX_MEM_W_EN, EX_S, EX_imm,
 		MEM_WB_EN, MEM_MEM_R_EN, MEM_MEM_W_EN,
 		WB_WB_EN, WB_MEM_R_EN, Branch_taken;
-	wire hazard, Two_src, freeze_N;
+	wire hazard, Two_src, SRAM_ready, cache_ready;
 	wire [23:0] ID_signed_immed_24, EX_signed_immed_24;
 	wire [11:0] ID_Shift_operand, EX_Shift_operand;
 	wire [3:0] src1, src2, EX_src1, EX_src2;
@@ -67,7 +67,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     IF IF_inst(
         .clk(clk),
         .rst(rst),
-        .freeze(hazard | ~freeze_N),
+        .freeze(hazard | ~SRAM_ready | ~cache_ready),
         .Branch_taken(Branch_taken),
         .BranchAddr(Branch_Address),
         .PC(IF_PC),
@@ -76,7 +76,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     IF_Reg IF_Reg_inst(
 	    .CLK(clk),
 	    .RST(rst),
-	    .freeze(hazard | ~freeze_N),
+	    .freeze(hazard | ~SRAM_ready | ~cache_ready),
 	    .PC_In(IF_PC),
 	    .flush(Branch_taken),
 	    .InstructionMemory_In(IF_Instruction),
@@ -110,7 +110,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     ID_Reg ID_Reg_inst(
 		.CLK(clk),
 		.RST(rst),
-		.freeze_N(freeze_N),
+		.freeze_N(SRAM_ready | cache_ready),
 		.flush(Branch_taken),
 		.WB_EN_In(ID_WB_EN),
 		.MEM_R_EN_In(ID_MEM_R_EN),
@@ -168,7 +168,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     EX_Reg EX_Reg_inst(
 		.CLK(clk),
 		.RST(rst),
-		.freeze_N(freeze_N),
+		.freeze_N(SRAM_ready | cache_ready),
 		.WB_EN_In(EX_WB_EN),
 		.MEM_R_EN_In(EX_MEM_R_EN),
 		.MEM_W_EN_In(EX_MEM_W_EN),
@@ -190,7 +190,8 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
 		.Address(MEM_ALU_Res),
 		.Data(MEM_Val_Rm),
 		.SRAM_WE_N(SRAM_WE_N),
-		.freeze_N(freeze_N),
+		.SRAM_ready(SRAM_ready),
+		.cache_ready(cache_ready),
 		.SRAM_DQ(SRAM_DQ),
 		.SRAM_ADDR(SRAM_ADDR),
 		.MEM_result(MEM_Data)
@@ -198,7 +199,7 @@ module ARM(clk, rst, SRAM_WE_N, SRAM_DQ, SRAM_ADDR, forward_EN, beep);
     MEM_Reg MEM_Reg_inst(
 		.CLK(clk),
 		.RST(rst),
-		.freeze_N(freeze_N),
+		.freeze_N(SRAM_ready | cache_ready),
 		.WB_EN_In(MEM_WB_EN),
 		.MEM_R_EN_In(MEM_MEM_R_EN),
 		.ALU_Res_In(MEM_ALU_Res),
