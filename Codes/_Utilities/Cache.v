@@ -1,13 +1,17 @@
-module Cache (clk, rst, LRU_update, invalidate, writeEn, address, ReadData, WriteData, isHit);
-    input clk, rst, LRU_update, invalidate, writeEn;
+module Cache (clk, rst, LRU_update, invalidate, MEM_R_EN, writeEn, address, ReadData, WriteData, isHit);
+    input clk, rst, LRU_update, invalidate, writeEn, MEM_R_EN;
     input [17:0] address;
     input [63:0] WriteData;
 
     output [31:0] ReadData;
     output isHit; // ?
 
-    reg [75:0] cache0 [0:63];
-    reg [75:0] cache1 [0:63];
+    reg [63:0] cache0_data [0:63];
+    reg [10:0] cache0_tag [0:63];
+    reg cache0_valid [0:63];
+    reg [63:0] cache1_data [0:63];
+    reg [10:0] cache1_tag [0:63];
+    reg cache1_valid [0:63];
     reg [63:0] LRU;
 
     wire offset, valid0, valid1, hit0, hit1;
@@ -20,8 +24,13 @@ module Cache (clk, rst, LRU_update, invalidate, writeEn, address, ReadData, Writ
     assign {tag, index, offset} = address;
 
     
-    assign {data0, tag0, valid0} = cache0[index];
-    assign {data1, tag1, valid1} = cache1[index];
+    assign data0 = cache0_data[index];
+    assign tag0 = cache0_tag[index];
+    assign valid0 = cache0_valid[index];
+
+    assign data1 = cache1_data[index];
+    assign tag1 = cache1_tag[index];
+    assign valid1 = cache1_valid[index];
 
     assign hit0 = ((tag0 == tag) & valid0) ? 1'b1:1'b0;
     assign hit1 = ((tag1 == tag) & valid1) ? 1'b1:1'b0;
@@ -35,18 +44,25 @@ module Cache (clk, rst, LRU_update, invalidate, writeEn, address, ReadData, Writ
 
     always @(posedge clk) begin
         if (writeEn & LRU[index]) begin
-            cache0[index] <= {WriteData, tag, 1'b1};
+            {cache0_data[index], cache0_tag[index], cache0_valid[index]} <= {WriteData, tag, 1'b1};
+            LRU[index] <= 1'b0;
         end
         else if (writeEn & ~LRU[index]) begin
-            cache1[index] <= {WriteData, tag, 1'b1};
+            {cache1_data[index], cache1_tag[index], cache1_valid[index]} <= {WriteData, tag, 1'b1};
+            LRU[index] <= 1'b1;
         end
-        if (invalidate & hit0) begin
-            valid0 <= 1'b0;
+        else if (invalidate & hit0) begin
+            cache0_valid[index] <= 1'b0;
+            // LRU[index] <= 1'b1;
         end
-        if (invalidate & hit1) begin
-            valid1 <= 1'b0;
+        else if (invalidate & hit1) begin
+            cache1_valid[index] <= 1'b0;
+            // LRU[index] <= 1'b0;
         end
-        if (LRU_update) begin
+        else if (MEM_R_EN & isHit) begin
+            LRU[index] <= (hit0) ? 1'b0:1'b1;
+        end
+        else if (LRU_update) begin
             LRU[index] <= (hit0) ? 1'b0:1'b1;
         end
     end
@@ -54,8 +70,8 @@ module Cache (clk, rst, LRU_update, invalidate, writeEn, address, ReadData, Writ
     integer i;
     initial begin
         for(i=0;i<64;i=i+1)begin
-            cache0[i] = 76'b0;
-            cache1[i] = 76'b0;
+            {cache0_data[i], cache0_tag[i], cache0_valid[i]} = 76'b0;
+            {cache1_data[i], cache1_tag[i], cache1_valid[i]} = 76'b0;
             LRU[i] = 1'b0;
         end
     end

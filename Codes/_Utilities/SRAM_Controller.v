@@ -37,7 +37,7 @@ module SRAM_Controller (clk, rst, SRAM_WE_N, writeEn, readEn, address, WriteData
         endcase
     end
 
-    always @(ps) begin : signals
+    always @(ps, address) begin : signals
         SRAM_ADDR = 18'b0; SRAM_WE_N = 1'b1;
         case (ps)
             w1: begin

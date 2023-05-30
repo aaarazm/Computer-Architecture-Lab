@@ -6,7 +6,7 @@ module MEM(
 	Address,
 	Data,
 	SRAM_WE_N,
-	SRAM_ready,
+	sram_ready,
 	cache_ready,
 	SRAM_DQ,
 	SRAM_ADDR,
@@ -17,13 +17,15 @@ module MEM(
 	input [31:0] Address, Data;
 
 	inout [15:0] SRAM_DQ;
-	output SRAM_WE_N, SRAM_ready, cache_ready;
+	output SRAM_WE_N, sram_ready, cache_ready;
 	output [17:0] SRAM_ADDR;
 	output [31:0] MEM_result;
 
-	wire LRU_update, SRAM_readEn, SRAM_writeEn;
-	wire [31:0] sram_readData, sram_address, cache_address, sram_writeData;
-
+	wire LRU_update, sram_readEn, sram_writeEn;
+	wire [31:0] sram_readData, sram_address, sram_writeData;
+	wire [63:0] cache_writeData;
+	wire [17:0] cache_address;
+ 
 /* 	Memory #(32, 32) memory_inst(
         .Address(Address),
         .WriteData(Data),
@@ -40,13 +42,12 @@ module MEM(
     	.MEM_W_EN(MEM_W_EN),
 		.ready(cache_ready),
 		.sram_readData(sram_readData),
-    	.SRAM_ready(SRAM_ready), // Not ready?
+    	.sram_ready(sram_ready), // Not ready?
 		.sram_address(sram_address),
 		.sram_writeData(sram_writeData),
-    	.SRAM_readEn(SRAM_readEn),
-		.SRAM_writeEn(SRAM_writeEn),
+    	.sram_readEn(sram_readEn),
+		.sram_writeEn(sram_writeEn),
 		.isHit(isHit),
-    	.cache_readData(cache_readData),
 		.cache_writeEn(cache_writeEn),
 		.cache_writeData(cache_writeData),
     	.cache_address(cache_address),
@@ -55,14 +56,15 @@ module MEM(
 	);
 
 	Cache cache_inst (
-		.clk(clk),
-		.rst(rst),
+		.clk(CLK),
+		.rst(RST),
 		.LRU_update(LRU_update),
 		.invalidate(invalidate),
-		.writeEn(writeEn),
+		.writeEn(cache_writeEn),
+		.MEM_R_EN(MEM_R_EN),
 		.address(cache_address),
-		.ReadData(sram_readData),
-		.WriteData(WriteData),
+		.ReadData(MEM_result),
+		.WriteData(cache_writeData),
 		.isHit(isHit)
 	);
 
@@ -70,12 +72,12 @@ module MEM(
 		.clk(CLK),
 		.rst(RST),
 		.SRAM_WE_N(SRAM_WE_N),
-		.writeEn(SRAM_writeEn),
-		.readEn(SRAM_readEn),
+		.writeEn(sram_writeEn),
+		.readEn(sram_readEn),
 		.address(sram_address),
 		.WriteData(sram_writeData),
 		.ReadData(sram_readData),
-		.ready(SRAM_ready),
+		.ready(sram_ready),
 		.SRAM_DQ(SRAM_DQ),
 		.SRAM_ADDR(SRAM_ADDR)
 	);

@@ -1,5 +1,5 @@
 `timescale 1ns/1ns
-module testbench_sram();
+module testbench_cache();
 
     reg clk = 0, rst = 0;
 
@@ -20,13 +20,22 @@ module testbench_sram();
         .SRAM_ADDR(SRAM_ADDR)
     );
 
-    assign SRAM_DQ = (uut.MEM_inst.sram_ctrl_inst.ps == 4) ? 16'b0010000000000000:
-                    (uut.MEM_inst.sram_ctrl_inst.ps == 6) ? 16'b0000000000000000: 16'bz;
+    SRAM sram_mimick (
+        .clk(clk),
+        .rst(rst),
+        .SRAM_DQ(SRAM_DQ),
+        .SRAM_ADDR(SRAM_ADDR),
+        .SRAM_UB_N(1'b0),
+        .SRAM_LB_N(1'b0),
+        .SRAM_WE_N(SRAM_WE_N),
+        .SRAM_CE_N(1'b0),
+        .SRAM_OE_N(1'b0)
+    );
 
     initial begin
         #1 rst = 1;
         #36 rst = 0;
-        #6000 $stop;
+        #7500 $stop;
     end
 
 endmodule

@@ -307,8 +307,12 @@ assign SRAM_LB_N = 1'b0;
 assign SRAM_UB_N = 1'b0;
 assign SRAM_OE_N = 1'b0;
 
+wire clk;
+
+freq_divider fd_inst(CLOCK_50, clk);
+
 ARM ins1(
-    .clk(CLOCK_50),
+    .clk(clk),
     .rst(SW[0]),
 	.SRAM_WE_N(SRAM_WE_N),
 	.SRAM_DQ(SRAM_DQ),
